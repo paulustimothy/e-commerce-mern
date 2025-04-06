@@ -34,7 +34,7 @@ export const useUserStore = create((set) => ({
                 name: emailOrName,
                 password,
             })
-            set({user: res.data, loading: false})
+            set({user: res.data.user, loading: false})
             toast.success("Login successful")
         } catch (error) {
             set({loading: false})

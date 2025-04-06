@@ -1,11 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import { useEffect } from 'react'
+
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUp'
+import AdminPage from './pages/AdminPage'
+import CategoryPage from './pages/CategoryPage'
+
 import Navbar from './components/Navbar'
-import { Toaster } from 'react-hot-toast'
 import { useUserStore } from './stores/useUserStore'
-import { useEffect } from 'react'
 import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
@@ -34,6 +38,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
         <Route path="/signup" element={user ? <Navigate to="/" /> : <SignUpPage />} />
+        <Route path="/dashboard" element={user?.role === "admin" ? <AdminPage /> : <Navigate to="/" />} />
+        <Route path="/category/:category" element={<CategoryPage />} />
       </Routes>
       </div>
       <Toaster />

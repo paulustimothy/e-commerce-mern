@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { UserPlus, ArrowRight, Loader } from "lucide-react"
 import { motion } from "framer-motion"
-import FormInput from "../components/FormInput"
+import FormInputAuth from "../components/FormInputAuth"
 import {signUpFields} from "../utils/formFields.js"
 import { useUserStore } from "../stores/useUserStore.js"
 
@@ -27,7 +27,7 @@ const SignUp = () => {
 
 
   return (
-    <div className="flex flex-col justfiy-center py-12 sm:px-6 lg:px-8">
+    <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <motion.div
         className="sm:mx-auto sm:w-full sm:max-w-md"
         initial={{ opacity: 0, y: -20 }}
@@ -46,7 +46,7 @@ const SignUp = () => {
             <div className="bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {signUpFields.map(field => (
-                        <FormInput
+                        <FormInputAuth
                             key={field.id}
                             {...field}
                             value={formData[field.id]}

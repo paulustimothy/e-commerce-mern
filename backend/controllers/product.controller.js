@@ -5,7 +5,7 @@ import Product from "../models/product.model.js";
 export const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find({});
-        res.status(200).json(products);
+        res.status(200).json({products});
     } catch (error) {
         console.log("Error in getAllProducts controller", error.message);   
         res.status(500).json({message: "Internal server error"});
@@ -129,7 +129,7 @@ export const getProductsByCategory = async (req, res) => {
             return res.status(404).json({message: "No products found"});
         }
 
-        res.status(200).json(products);
+        res.status(200).json({products});
         
     } catch (error) {
         console.log("Error in getProductsByCategory controller", error.message);

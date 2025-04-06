@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { LogIn, ArrowRight, Loader } from "lucide-react"
 import { motion } from "framer-motion"
-import FormInput from "../components/FormInput"
+import FormInputAuth from "../components/FormInputAuth"
 import {loginFields} from "../utils/formFields.js"
 import { useUserStore } from "../stores/useUserStore.js"
 
@@ -45,7 +45,7 @@ const LoginPage = () => {
             <div className="bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {loginFields.map(field => (
-                        <FormInput
+                        <FormInputAuth
                             key={field.id}
                             {...field}
                             value={field.id === "emailOrName" ? emailOrName : password}
