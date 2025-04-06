@@ -112,7 +112,7 @@ export const getRecommendations = async (req, res) => {
             }
         ])
 
-        res.status(200).json(products);
+        res.status(200).json({products});
     } catch (error) {
         console.log("Error in getRecommendations controller", error.message);
         res.status(500).json({message: "Internal server error"});

@@ -5,6 +5,7 @@ import axiosInstance from "../lib/axios";
 export const useProductStore = create((set) => ({
     products: [],
     loading: false,
+    recommendations: [],
 
     setProducts: (products) => set({products}),
     //TODO learn about this
@@ -76,4 +77,15 @@ export const useProductStore = create((set) => ({
             toast.error("Failed to update product");
         }
     },
+
+    getRecommendations: async () => {
+        set({loading: true});
+        try {
+            const res = await axiosInstance.get("/products/recommendations");
+            set({recommendations: res.data.products, loading: false});
+        } catch (error) {
+            set({loading: false, recommendations: []});
+            toast.error("Failed to fetch recommendations");
+        }
+    }
 })) 

@@ -12,17 +12,25 @@ const ProductCard = ({product}) => {
         if(!user){
             toast.error("Please login to add to cart", {id:"login"}); //id is used to prevent multiple toasts
             return
-        } else {
+	} else {
             addToCart(product);
         }
     }
 
   return (
     <div className='flex w-full relative flex-col overflow-hidden rounded-lg border border-gray-700 shadow-lg'>
-			<div className='relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl'>
-				<img className='object-cover w-full' src={product.image} alt='product image' />
-				<div className='absolute inset-0 bg-black bg-opacity-20' />
-			</div>
+		<div className='relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl group'>
+			<img 
+				className='object-contain w-full h-full' 
+				src={product.image} 
+				alt={product.name}
+				style={{
+					objectPosition: 'center',
+					backgroundColor: '#ffffff10',
+					padding: '0.5rem'
+				}}
+			/>
+		</div>
 
 			<div className='mt-4 px-5 pb-5'>
 				<h5 className='text-xl font-semibold tracking-tight text-white'>{product.name}</h5>
