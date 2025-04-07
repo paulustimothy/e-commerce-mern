@@ -87,5 +87,16 @@ export const useProductStore = create((set) => ({
             set({loading: false, recommendations: []});
             toast.error("Failed to fetch recommendations");
         }
+    },
+
+    fetchFeaturedProducts: async () => {
+        set({loading: true});
+        try {
+            const res = await axiosInstance.get("/products/featured");
+            set({products: res.data, loading: false});
+        } catch (error) {
+            console.log("Error in fetchFeaturedProducts", error.message);
+            set({loading: false, error: error.message});
+        }
     }
 })) 
