@@ -46,10 +46,13 @@ const Navbar = () => {
                 )}
 
                 {user ? (
+                    <>
                     <button onClick={logout} className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-md flex items-center transition duration-300 ease-in-out">
                         <LogOut size={18} />
                         <span className="hidden sm:inline ml-2">Log out</span>
                     </button>
+                    <span className="text-gray-300">Hello, {user.name}</span>
+                    </>
                 ) : (
                     <>
                         <Link to={'/signup'} className="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-md flex items-center transition duration-300 ease-in-out">

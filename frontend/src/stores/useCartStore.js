@@ -4,7 +4,8 @@ import axiosInstance from "../lib/axios";
 
 export const useCartStore = create((set, get) => ({
     cart: [],
-    coupun: null,
+    coupon: null,
+    availableCoupons: [],
     total: 0,
     subtotal: 0,
     isCouponApplied: false,
@@ -39,6 +40,30 @@ export const useCartStore = create((set, get) => ({
         }
     },
 
+    getCoupon: async () => {
+        try {
+            const res = await axiosInstance.get("/coupons");
+            set({availableCoupons: res.data.coupons});
+        } catch (error) {
+            console.log("Error getting coupons", error.message);
+        }
+    },
+
+    applyCoupon: async (couponCode) => {
+        try {
+            const res = await axiosInstance.post("/coupons/validate", {couponCode});    
+            set ({coupon: res.data, isCouponApplied: true});
+            get().calculateTotals();
+        } catch (error) {
+            toast.error("Failed to apply coupon");
+        }
+    },
+
+    removeCoupon: () => {
+        set({coupon: null, isCouponApplied: false});
+        get().calculateTotals();
+    },
+
     calculateTotals: () => {
         const {cart,coupon} = get();
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -62,7 +87,7 @@ export const useCartStore = create((set, get) => ({
             toast.error("Failed to remove product from cart");
         }
     },
-
+//TODO error clearCart
     clearCart: async () => {
         set({cart: [], total: 0, subtotal: 0, coupon: null});
     },
