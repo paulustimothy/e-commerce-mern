@@ -63,6 +63,10 @@ export const useCartStore = create((set, get) => ({
         }
     },
 
+    clearCart: async () => {
+        set({cart: [], total: 0, subtotal: 0, coupon: null});
+    },
+
     updateQuantity: async (productId, quantity) => {
         if(quantity === 0){
             get().removeFromCart(productId);

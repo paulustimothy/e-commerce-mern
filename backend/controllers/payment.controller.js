@@ -15,7 +15,7 @@ export const createCheckoutSession = async (req, res) => {
 
         const lineItems = products.map((product) => {
             const amount = Math.round(product.price * 100); // Convert to cents
-            totalAmount += amount;
+            totalAmount += amount * product.quantity;
 
             // return to stripe
             return {
@@ -26,7 +26,8 @@ export const createCheckoutSession = async (req, res) => {
                         images: [product.image],
                     },
                     unit_amount: amount,
-                }
+                },
+                quantity: product.quantity || 1,
             }
         })
 
@@ -39,7 +40,7 @@ export const createCheckoutSession = async (req, res) => {
         }
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card", "paypal", "amazon_pay"],
+            payment_method_types: ["card"],
             line_items: lineItems,
             mode: "payment",
             success_url: `${process.env.FRONTEND_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
@@ -95,7 +96,7 @@ export const checkoutSuccess = async (req, res) => {
         const newOrder = new Order({
             user: session.metadata.userId,
             products: products.map((product) => ({
-                productId: product.id,
+                product: product.id,
                 price: product.price,
                 quantity: product.quantity,
             })),
@@ -115,7 +116,7 @@ export const checkoutSuccess = async (req, res) => {
         console.error("Error processing checkout success:", error);
         res.status(500).json({
             success: false,
-            message: "Error processing checkout success",
+            message: "Error processing checkout success", error: error.message
         })
     }
 }
