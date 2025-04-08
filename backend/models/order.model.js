@@ -35,10 +35,6 @@ const orderSchema = new mongoose.Schema(
 			type: String,
 			unique: true,
 		},
-        midtransOrderId: {
-			type: String,
-			unique: true,
-		},
 	},
 	{ timestamps: true }
 );

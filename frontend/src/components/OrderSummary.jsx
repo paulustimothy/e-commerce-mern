@@ -14,7 +14,7 @@ const OrderSummary = () => {
 	const formattedSavings = savings.toFixed(2);
 
 	const stripePromise = loadStripe("pk_test_51P1hbwBOjQBJ2cLXhi1tqgjXyE7KEJCgwjec3r87qvpQTSKCgcKPG88pWgk2UUPPPYnL8bwU65i6tICEJf3h1UUf00Ok4bqXPN");
-
+	
 	const handlePayment = async () => {	
 		const stripe = await stripePromise;
 		const res = await axiosInstance.post("/payments/create-checkout-session", {

@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
@@ -20,16 +20,21 @@ function App() {
 
   const {user, checkAuth, checkingAuth} = useUserStore();
   const {getCartItems} = useCartStore();
+  const authInitialized = useRef(false);
   
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth])
+    // Only run once, even in strict mode (to avoid multiple auth checks)
+    if (!authInitialized.current) {
+      checkAuth();
+      authInitialized.current = true;
+    }
+  }, []);
 
   useEffect(() => {
     if(user){
       getCartItems();
     }
-  }, [getCartItems, user])
+  }, [user])
   
   if(checkingAuth) return <LoadingSpinner />
   

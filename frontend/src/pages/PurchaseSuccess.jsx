@@ -18,8 +18,8 @@ const PurchaseSuccessPage = () => {
         const handleCheckoutSuccess = async (sessionId) => {
         try {
             const res = await axiosInstance.post("/payments/checkout-success", {sessionId})
-            clearCart();
             setOrderId(res.data.orderId);
+            clearCart();
         } catch (error) {
             console.log(error);
         } finally {
