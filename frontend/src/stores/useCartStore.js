@@ -87,7 +87,6 @@ export const useCartStore = create((set, get) => ({
             toast.error("Failed to remove product from cart");
         }
     },
-//TODO error clearCart
     clearCart: async () => {
         try {
             await axiosInstance.delete('/cart', {data: {}});

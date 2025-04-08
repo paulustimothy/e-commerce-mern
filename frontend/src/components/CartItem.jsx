@@ -4,7 +4,6 @@ import { useCartStore } from '../stores/useCartStore'
 const CartItem = ({item}) => {
 
     const {updateQuantity, removeFromCart} = useCartStore();
-//TODO add only 200 words in the description
   return (
     <div className='rounded-lg border p-4 shadow-sm border-gray-700 bg-gray-800 md:p-6'>
 			<div className='space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0'>
@@ -43,7 +42,10 @@ const CartItem = ({item}) => {
 					<p className='text-base font-medium text-white hover:text-emerald-400 hover:underline'>
 						{item.name}
 					</p>
-					<p className='text-sm text-gray-400'>{item.description}</p>
+					<p className='text-sm text-gray-400'>
+						{item.description.slice(0, 200)}
+						{item.description.length > 200 && '...'}
+					</p>
 
 					<div className='flex items-center gap-4'>
 						<button

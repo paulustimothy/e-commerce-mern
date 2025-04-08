@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { Users, Package, ShoppingCart, DollarSign } from 'lucide-react'
 import axiosInstance from '../lib/axios'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import AnalyticsSkeleton from './AnalyticsSkeleton'
 
 const AnalyticsTab = () => {
 
@@ -32,7 +33,7 @@ const AnalyticsTab = () => {
 	}, []);
 
   if (isLoading) {
-		return <div>Loading...</div>;
+		return <AnalyticsSkeleton />
 	}
   
   return (
@@ -100,8 +101,6 @@ const AnalyticsTab = () => {
 		</div>
 	);
 };
-
-//TODO put skeletons on all loading states
 
 export default AnalyticsTab
 
