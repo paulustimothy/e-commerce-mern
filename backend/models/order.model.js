@@ -39,6 +39,9 @@ const orderSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+// Create a unique index on stripeSessionId to prevent duplicates
+orderSchema.index({stripeSessionId: 1}, {unique: true});
+
 const Order = mongoose.model("Order", orderSchema);
 
 export default Order;

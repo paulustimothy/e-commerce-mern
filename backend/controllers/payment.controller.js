@@ -1,6 +1,8 @@
 import { stripe } from "../lib/stripe.js";
 import Coupon from "../models/coupon.model.js";
 import Order from "../models/order.model.js";
+import User from "../models/user.model.js";
+import { sendOrderConfirmationEmail } from "../lib/emailService.js";
 
 export const createCheckoutSession = async (req, res) => {
     try {
@@ -79,8 +81,20 @@ export const createCheckoutSession = async (req, res) => {
 export const checkoutSuccess = async (req, res) => {
     try {
         const {sessionId} = req.body;
+
         const session = await stripe.checkout.sessions.retrieve(sessionId);
 
+        // Check for existing order first
+        const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
+        if (existingOrder) {
+            return res.status(200).json({
+                success: true,
+                message: "Order already processed",
+                orderId: existingOrder._id,
+                alreadyExists: true
+            });
+        }
+        
         if(session.payment_status === "paid"){
             if(session.metadata.couponCode){
                 await Coupon.findOneAndUpdate({
@@ -89,6 +103,21 @@ export const checkoutSuccess = async (req, res) => {
                     isActive: false,
                 })
             }
+        }
+
+        // Mark the session as used in Stripe metadata
+        await stripe.checkout.sessions.update(sessionId, {
+            metadata: {
+                ...session.metadata,
+                used: 'true'
+            }
+        });
+
+        if (session.metadata.used === 'true') {
+            return res.status(400).json({
+                success: false,
+                message: "This session has already been used"
+            });
         }
 
         //create a new order
@@ -101,22 +130,33 @@ export const checkoutSuccess = async (req, res) => {
                 quantity: product.quantity,
             })),
             totalAmount: session.amount_total / 100,
-            stripeSessionId: sessionId,            
+            stripeSessionId: sessionId,
         })
 
         await newOrder.save();
+
+        // Get user email
+        const user = await User.findById(session.metadata.userId);
+        
+        try {
+            await sendOrderConfirmationEmail(newOrder, user.email);
+        } catch (emailError) {
+                console.error("Error sending confirmation email:", emailError);
+        }
 
         res.status(200).json({
             success: true,
             message: "Payment successful, order created, and coupon applied if applicable",
             orderId: newOrder._id,
+            alreadyExists: false,
         })
 
     } catch (error) {
         console.error("Error processing checkout success:", error);
         res.status(500).json({
             success: false,
-            message: "Error processing checkout success", error: error.message
+            message: "Error processing checkout success",
+            error: error.message
         })
     }
 }

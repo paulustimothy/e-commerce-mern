@@ -1,11 +1,9 @@
 import { ArrowRight, CheckCircle, HandHeart } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
 import axiosInstance from "../lib/axios";
 import Confetti from "react-confetti";
-
-// TODO add email functionality
 
 const PurchaseSuccessPage = () => {
 
@@ -13,28 +11,53 @@ const PurchaseSuccessPage = () => {
     const [error, setError] = useState(null);
     const [orderId, setOrderId] = useState(null);
     const {clearCart} = useCartStore();
+	const checkoutProcessed = useRef(false);
+	const navigate = useNavigate();
 
     useEffect(() => {
         const handleCheckoutSuccess = async (sessionId) => {
+
+		if(checkoutProcessed.current) return;
+
         try {
+			checkoutProcessed.current = true;
             const res = await axiosInstance.post("/payments/checkout-success", {sessionId})
+
+			// If order already exists, just show it
+			if (res.data.alreadyExists) {
+				setOrderId(res.data.orderId);
+				setIsProcessing(false);
+				return;
+			}
+
             setOrderId(res.data.orderId);
             clearCart();
+
+			// Remove sessionId from URL to prevent refresh issues
+			navigate('/purchase-success', { replace: true });
+
         } catch (error) {
             console.log(error);
         } finally {
             setIsProcessing(false);
         }
     };
-
+//TODO create a history of orders
         const sessionId = new URLSearchParams(window.location.search).get("session_id");
-        if(sessionId){
-            handleCheckoutSuccess(sessionId);
-        }else{
-            setIsProcessing(false);
-            setError("No session ID found in the URL");
+
+        // If no sessionId and we have an orderId, we're probably refreshing
+        if (!sessionId && orderId) {
+            return; // Do nothing if we're just refreshing with an existing order
         }
-    }, [clearCart])
+
+        // If no sessionId and no orderId, redirect to home
+        if (!sessionId) {
+            navigate('/');
+            return;
+        }
+
+        handleCheckoutSuccess(sessionId);
+    }, [clearCart, navigate, orderId])
 
     if(isProcessing) return "Processing...";
     if(error) return `Error: ${error}`;
@@ -63,7 +86,7 @@ const PurchaseSuccessPage = () => {
 						Thank you for your order. {"We're"} processing it now.
 					</p>
 					<p className='text-emerald-400 text-center text-sm mb-6'>
-						Check your email for order details and updates.
+						Order confirmation has been sent to your email.
 					</p>
 					<div className='bg-gray-700 rounded-lg p-4 mb-6'>
 						<div className='flex items-center justify-between mb-2'>
