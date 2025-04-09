@@ -131,6 +131,7 @@ export const checkoutSuccess = async (req, res) => {
             })),
             totalAmount: session.amount_total / 100,
             stripeSessionId: sessionId,
+            coupon: session.metadata.couponCode ? await Coupon.findOne({code: session.metadata.couponCode, userId: session.metadata.userId}) : null
         })
 
         await newOrder.save();

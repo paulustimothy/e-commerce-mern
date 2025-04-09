@@ -1,4 +1,3 @@
-//TODO learn all the props
 const FormInputProduct = ({ 
     label, 
     id, 

@@ -8,7 +8,7 @@ export const useProductStore = create((set) => ({
     recommendations: [],
 
     setProducts: (products) => set({products}),
-    //TODO learn about this
+    
     createProduct: async (productData) => {
         set({loading: true});
         try {

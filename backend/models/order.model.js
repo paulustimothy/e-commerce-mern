@@ -35,6 +35,10 @@ const orderSchema = new mongoose.Schema(
 			type: String,
 			unique: true,
 		},
+		coupon: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Coupon",
+		},
 	},
 	{ timestamps: true }
 );

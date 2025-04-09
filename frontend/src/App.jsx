@@ -10,6 +10,9 @@ import CategoryPage from './pages/CategoryPage'
 import CartPage from './pages/CartPage'
 import PurchaseSuccess from './pages/PurchaseSuccess'
 import PurchaseCancel from './pages/PurchaseCancel'
+import OrderPage from './pages/OrderPage'
+import OrderDetails from './pages/OrderDetailPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 import Navbar from './components/Navbar'
 import LoadingSpinner from './components/LoadingSpinner'
@@ -51,13 +54,23 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
         <Route path="/signup" element={user ? <Navigate to="/" /> : <SignUpPage />} />
+
         <Route path="/dashboard" element={user?.role === "admin" ? <AdminPage /> : <Navigate to="/" />} />
+        
         <Route path="/category/:category" element={<CategoryPage />} />
+
         <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />} />
+
         <Route path="/purchase-success" element={user ? <PurchaseSuccess /> : <Navigate to="/login" />} />
         <Route path="/purchase-cancel" element={user ? <PurchaseCancel /> : <Navigate to="/login" />} />
+
+        <Route path="/orders" element={user ? <OrderPage /> : <Navigate to="/login" />} />
+        <Route path="/orders/:orderId" element={user ? <OrderDetails /> : <Navigate to="/login" />} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </div>
       <Toaster />

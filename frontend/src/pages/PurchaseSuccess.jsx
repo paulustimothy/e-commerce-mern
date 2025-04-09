@@ -42,7 +42,8 @@ const PurchaseSuccessPage = () => {
             setIsProcessing(false);
         }
     };
-//TODO create a history of orders
+//TODO make all pages responsive
+// TODO implement midtrans
         const sessionId = new URLSearchParams(window.location.search).get("session_id");
 
         // If no sessionId and we have an orderId, we're probably refreshing
