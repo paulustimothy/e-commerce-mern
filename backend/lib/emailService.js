@@ -62,3 +62,35 @@ export const sendOrderConfirmationEmail = async (order, userEmail) => {
     throw error;
   }
 };
+
+export const sendVerificationEmail = async (user, verificationToken) => {
+  const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}&userId=${user._id}`;
+  
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h1 style="color: #059669; text-align: center;">Verify Your Email</h1>
+      <p>Thank you for signing up! Please verify your email by clicking the link below:</p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${verificationLink}" 
+           style="background-color: #059669; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          Verify Email
+        </a>
+      </div>
+      
+      <p>If the button doesn't work, copy and paste this URL into your browser:</p>
+      <p style="word-break: break-all; color: #4b5563;">${verificationLink}</p>
+      
+      <p style="color: #6b7280; margin-top: 30px;">This link will expire in 24 hours.</p>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: `"My E-Commerce Store" <${process.env.EMAIL_USER}>`,
+    to: user.email,
+    subject: "Verify Your Email Address",
+    html: emailHtml
+  });
+
+  return true;
+};

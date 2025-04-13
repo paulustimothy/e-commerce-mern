@@ -6,6 +6,7 @@ export const useUserStore = create((set, get) => ({
     user: null,
     loading: false,
     checkingAuth: true,
+    set: set,
 
     signup: async ({name, email, password, confirmPassword}) => {
         set({loading: true})
@@ -19,6 +20,7 @@ export const useUserStore = create((set, get) => ({
             const res = await axiosInstance.post("/auth/signup", {name, email, password});
             set({user: res.data, loading: false})
             toast.success("Account created successfully")
+            return res.data;
         } catch (error) {
             set({loading: false})
             toast.error(error.response.data.message || "Something went wrong")
@@ -34,11 +36,17 @@ export const useUserStore = create((set, get) => ({
                 name: emailOrName,
                 password,
             })
+
             set({user: res.data.user, loading: false})
             toast.success("Login successful")
+            return res.data;
         } catch (error) {
             set({loading: false})
+            if (error.response?.status === 403 && error.response.data.needsVerification) {
+                return error.response.data; // Return the verification data
+            }
             toast.error(error.response.data.message || "Something went wrong")
+            throw error;
         }
     },
     
@@ -46,7 +54,11 @@ export const useUserStore = create((set, get) => ({
         set({checkingAuth: true})
         try {
             const res = await axiosInstance.get("/auth/profile")
-            set({user: res.data, checkingAuth: false})
+            if(res.data.isVerified){
+                set({user: res.data, checkingAuth: false})
+            } else{
+                set({user: null, checkingAuth: false})
+            }
         } catch(error) {
             set({user: null, checkingAuth: false})
         }

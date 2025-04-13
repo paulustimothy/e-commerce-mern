@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { LogIn, ArrowRight, Loader } from "lucide-react"
 import { motion } from "framer-motion"
 import FormInputAuth from "../components/FormInputAuth"
@@ -9,6 +9,7 @@ import { useUserStore } from "../stores/useUserStore.js"
 const LoginPage = () => {
     const [emailOrName, setEmailOrName] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
     
     const handleEmailChange = (e) => {
         setEmailOrName(e.target.value)
@@ -20,9 +21,16 @@ const LoginPage = () => {
 
     const {login, loading} = useUserStore(); 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        login({emailOrName, password})
+        try {
+            const result = await login({ emailOrName, password });
+            if (result?.needsVerification) {
+                navigate(`/verification-needed?userId=${result.userId}`);
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+        }
     }
 
   return (

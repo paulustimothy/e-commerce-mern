@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { UserPlus, ArrowRight, Loader } from "lucide-react"
 import { motion } from "framer-motion"
 import FormInputAuth from "../components/FormInputAuth"
@@ -7,6 +7,7 @@ import {signUpFields} from "../utils/formFields.js"
 import { useUserStore } from "../stores/useUserStore.js"
 
 const SignUp = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -20,11 +21,11 @@ const SignUp = () => {
 
     const {signup, loading} = useUserStore();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        signup(formData)
+        const result = await signup(formData)
+        navigate(`/verification-needed?userId=${result.userId}`);
     }
-
 
   return (
     <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">

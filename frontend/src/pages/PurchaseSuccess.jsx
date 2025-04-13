@@ -45,7 +45,6 @@ const PurchaseSuccessPage = () => {
 			setIsProcessing(false);
 		}
     };
-//TODO make all pages responsive
 //TODO make email verification and reset password
 // TODO learn the midtrans payment flow
        const params = new URLSearchParams(window.location.search)

@@ -13,6 +13,8 @@ import PurchaseCancel from './pages/PurchaseCancel'
 import OrderPage from './pages/OrderPage'
 import OrderDetails from './pages/OrderDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
+import VerifyEmail from './pages/VerifyEmail'
+import VerificationNeeded from './pages/VerificationNeeded'
 
 import Navbar from './components/Navbar'
 import LoadingSpinner from './components/LoadingSpinner'
@@ -34,7 +36,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(user){
+    if(user && user.isVerified){
       getCartItems();
     }
   }, [user])
@@ -69,6 +71,9 @@ function App() {
 
         <Route path="/orders" element={user ? <OrderPage /> : <Navigate to="/login" />} />
         <Route path="/orders/:orderId" element={user ? <OrderDetails /> : <Navigate to="/login" />} />
+
+        <Route path="/verify-email" element={user?.isVerified ? <Navigate to="/" /> : <VerifyEmail />} />
+        <Route path="/verification-needed" element={user?.isVerified ? <Navigate to="/" /> : <VerificationNeeded />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
