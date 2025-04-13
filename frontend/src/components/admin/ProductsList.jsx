@@ -1,6 +1,6 @@
-import { useProductStore } from "../stores/useProductStore";
+import { useProductStore } from "../../stores/useProductStore";
 import {motion} from "framer-motion";
-import ProductTableRow from "./ProductTableRow";
+import ProductTableRow from "../admin/ProductTableRow";
 
 const ProductsList = () => {
   const {products, deleteProduct, toggleFeaturedProduct} = useProductStore();

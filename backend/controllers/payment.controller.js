@@ -226,7 +226,6 @@ export const checkoutSuccess = async (req, res) => {
                     })),
                     totalAmount: session.amount_total / 100,
                     stripeSessionId: sessionId,
-                    status: 'completed',
                     coupon: session.metadata.couponCode ? 
                         await Coupon.findOne({
                             code: session.metadata.couponCode,
@@ -250,7 +249,6 @@ export const checkoutSuccess = async (req, res) => {
                     success: true,
                     message: "Payment successful and order created",
                     orderId: newOrder._id,
-                    status: 'completed',
                     alreadyExists: false
                 });
             }
@@ -259,7 +257,6 @@ export const checkoutSuccess = async (req, res) => {
         // Handle Midtrans payment
         if (midtransOrderId) {
             try {
-                // Get transaction status from Midtrans
                 const transaction = await snap.transaction.status(midtransOrderId);
                 
                 if (!transaction) {
@@ -294,7 +291,6 @@ export const checkoutSuccess = async (req, res) => {
                         })),
                         totalAmount: transaction.gross_amount,
                         midtransOrderId,
-                        status: 'completed',
                         coupon: couponCode ? 
                             await Coupon.findOne({ code: couponCode }) : null
                     });
@@ -315,7 +311,6 @@ export const checkoutSuccess = async (req, res) => {
                         success: true,
                         message: "Payment successful and order created",
                         orderId: newOrder._id,
-                        status: 'completed',
                         alreadyExists: false
                     });
                 }
@@ -356,6 +351,7 @@ export const handleMidtransNotification = async (req, res) => {
     try {
         const notification = await snap.transaction.notification(req.body);
 
+        // Extract notification data
         const {
             order_id: midtransOrderId,
             transaction_status: transactionStatus,
@@ -363,7 +359,6 @@ export const handleMidtransNotification = async (req, res) => {
             metadata
         } = notification;
 
-        // Find existing order
         let order = await Order.findOne({ midtransOrderId });
         
         // If order doesn't exist and transaction is completed, create new order
@@ -383,7 +378,6 @@ export const handleMidtransNotification = async (req, res) => {
                 })),
                 totalAmount: notification.gross_amount,
                 midtransOrderId,
-                status: 'completed',
                 coupon: couponCode ? await Coupon.findOne({ code: couponCode }) : null
             });
 
@@ -406,38 +400,12 @@ export const handleMidtransNotification = async (req, res) => {
                     console.error("Error sending confirmation email:", emailError);
                 }
             }
-        } else if (order) {
-            // Update existing order status
-            if (transactionStatus === 'settlement' || 
-                (transactionStatus === 'capture' && fraudStatus === 'accept')) {
-                order.status = 'completed';
-                await order.save();
-                
-                // Deactivate coupon if used and order is now completed
-                if (order.coupon) {
-                    await Coupon.findByIdAndUpdate(
-                        order.coupon,
-                        { isActive: false }
-                    );
-                }
-                
-                // Send confirmation email if status changed to completed
-                const user = await User.findById(order.user);
-                if (user) {
-                    try {
-                        await sendOrderConfirmationEmail(order, user.email);
-                    } catch (emailError) {
-                        console.error("Error sending confirmation email:", emailError);
-                    }
-                }
-            }
         }
 
         res.status(200).json({
             success: true,
-            message: order ? `Order ${order.status}` : 'Notification processed',
+            message: "Notification processed",
             orderId: order?._id,
-            status: order?.status
         });
 
     } catch (error) {

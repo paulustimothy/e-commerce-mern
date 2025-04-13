@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useOrderStore } from '../stores/useOrderStore';
+import { useOrderStore } from '../../stores/useOrderStore';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Package, Clock, ChevronRight, Eye } from 'lucide-react';
 

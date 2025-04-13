@@ -1,8 +1,8 @@
 import { ArrowRight, CheckCircle, HandHeart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCartStore } from "../stores/useCartStore";
-import axiosInstance from "../lib/axios";
+import { useCartStore } from "../../stores/useCartStore";
+import axiosInstance from "../../lib/axios";
 import Confetti from "react-confetti";
 
 const PurchaseSuccessPage = () => {
@@ -28,7 +28,7 @@ const PurchaseSuccessPage = () => {
 			if (response.data.success) {
 				setOrderId(response.data.orderId);
 				
-				if (response.data.status === 'completed' || response.data.alreadyExists) {
+				if (response.data.success || response.data.alreadyExists) {
 					await clearCart();
 				}
 
@@ -45,8 +45,7 @@ const PurchaseSuccessPage = () => {
 			setIsProcessing(false);
 		}
     };
-//TODO make email verification and reset password
-// TODO learn the midtrans payment flow
+
        const params = new URLSearchParams(window.location.search)
 	   const sessionId = params.get("session_id");
 	   const midtransOrderId = params.get("order_id");

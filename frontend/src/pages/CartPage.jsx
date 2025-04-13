@@ -2,10 +2,10 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ShoppingCart } from 'lucide-react'
 import { useCartStore } from '../stores/useCartStore'
-import CartItem from '../components/CartItem'
-import PeopleAlsoBought from '../components/PeopleAlsoBought'
-import OrderSummary from '../components/OrderSummary'
-import GiftCouponCard from '../components/GiftCouponCard'
+import CartItem from '../components/cart/CartItem'
+import PeopleAlsoBought from '../components/cart/PeopleAlsoBought'
+import OrderSummary from '../components/cart/OrderSummary'
+import GiftCouponCard from '../components/cart/GiftCouponCard'
 
 const CartPage = () => {
 

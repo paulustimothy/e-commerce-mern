@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useOrderStore } from '../stores/useOrderStore';
+import { useOrderStore } from '../../stores/useOrderStore';
 import { ArrowLeft, Calendar, Clock, Package, CreditCard } from 'lucide-react';
 
 const OrderDetail = () => {

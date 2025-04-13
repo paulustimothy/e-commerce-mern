@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Mail, RefreshCw } from 'lucide-react';
-import axiosInstance from '../lib/axios';
+import axiosInstance from '../../lib/axios';
 
 const VerificationNeeded = () => {
     const [resending, setResending] = useState(false);

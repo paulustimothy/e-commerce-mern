@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { MoveRight, CreditCard, Wallet } from 'lucide-react'
-import { useCartStore } from '../stores/useCartStore'
+import { useCartStore } from '../../stores/useCartStore'
 import { loadStripe } from '@stripe/stripe-js';
-import axiosInstance from '../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { toast } from 'react-hot-toast';
 
 const OrderSummary = () => {

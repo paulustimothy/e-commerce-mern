@@ -2,9 +2,9 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { UserPlus, ArrowRight, Loader } from "lucide-react"
 import { motion } from "framer-motion"
-import FormInputAuth from "../components/FormInputAuth"
-import {signUpFields} from "../utils/formFields.js"
-import { useUserStore } from "../stores/useUserStore.js"
+import FormInputAuth from "../../components/formInput/FormInputAuth.jsx"
+import {signUpFields} from "../../utils/formFields.js"
+import { useUserStore } from "../../stores/useUserStore.js"
 
 const SignUp = () => {
     const navigate = useNavigate();

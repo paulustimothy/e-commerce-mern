@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { useProductStore } from '../stores/useProductStore';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ProductCard from '../components/ProductCard';
+import { useProductStore } from '../../stores/useProductStore';
+import LoadingSpinner from '../LoadingSpinner';
+import ProductCard from '../ProductCard';
 
 const PeopleAlsoBought = () => {
 

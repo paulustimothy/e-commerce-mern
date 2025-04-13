@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { ArrowLeft, Mail, Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import axiosInstance from '../lib/axios';
+import axiosInstance from '../../lib/axios';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');

@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 import { useProductStore } from "../stores/useProductStore";
 
-import CreateProduct from "../components/CreateProduct";
-import ProductsList from "../components/ProductsList";
-import AnalyticsTab from "../components/AnalyticsTab";
+import CreateProduct from "../components/admin/CreateProduct";
+import ProductsList from "../components/admin/ProductsList";
+import AnalyticsTab from "../components/admin/AnalyticsTab";
 
 const tabs = [
 	{ id: "create", label: "Create Product", icon: PlusCircle },

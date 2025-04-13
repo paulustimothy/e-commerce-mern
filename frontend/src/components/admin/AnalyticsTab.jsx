@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { Users, Package, ShoppingCart, DollarSign } from 'lucide-react'
-import axiosInstance from '../lib/axios'
+import axiosInstance from '../../lib/axios'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import AnalyticsSkeleton from './AnalyticsSkeleton'
 

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Mail, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
-import axiosInstance from '../lib/axios';
-import { useUserStore } from '../stores/useUserStore';
+import axiosInstance from '../../lib/axios';
+import { useUserStore } from '../../stores/useUserStore';
 
 const VerifyEmail = () => {
     const [verifying, setVerifying] = useState(true);

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { ArrowLeft, CheckCircle, AlertCircle, Loader } from 'lucide-react';
-import axiosInstance from '../lib/axios';
+import axiosInstance from '../../lib/axios';
 
 const ResetPassword = () => {
     const [password, setPassword] = useState('');

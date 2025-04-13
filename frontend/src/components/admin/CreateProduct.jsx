@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, Upload, Loader } from "lucide-react";
-import FormInputProduct from "./FormInputProduct";
-import { createProductFields } from "../utils/formFields";
-import { useProductStore } from "../stores/useProductStore";
+import { PlusCircle, Loader } from "lucide-react";
+import FormInputProduct from "../formInput/FormInputProduct";
+import { createProductFields } from "../../utils/formFields";
+import { useProductStore } from "../../stores/useProductStore";
 
 const CreateProduct = () => {
   const [formData, setFormData] = useState({
