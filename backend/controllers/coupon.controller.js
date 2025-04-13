@@ -13,7 +13,23 @@ export const getCoupons = async (req, res) => {
 export const validateCoupon = async (req, res) => {
     try {
         const {couponCode} = req.body;
-        const coupon = await Coupon.findOne({code:couponCode, isActive: true, userId: req.user._id});
+        let coupon = await Coupon.findOne({
+            code: couponCode, 
+            isActive: true, 
+            userId: req.user._id
+        });
+
+        if(!coupon){
+            coupon = await Coupon.findOne({
+                code: couponCode,
+                isActive: true,
+                userId: null, 
+                $or: [
+                    { usageLimit: null }, 
+                    { usedCount: { $lt: "$usageLimit" } } //$lt means less than
+                ]
+            });
+        }
 
         if(!coupon){
             return res.status(404).json({message: "Coupon not found"});

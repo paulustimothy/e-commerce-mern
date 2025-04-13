@@ -15,49 +15,55 @@ const PurchaseSuccessPage = () => {
 	const navigate = useNavigate();
 
     useEffect(() => {
-        const handleCheckoutSuccess = async (sessionId) => {
+        const handleCheckoutSuccess = async (sessionId, midtransOrderId) => {
 
 		if(checkoutProcessed.current) return;
 
         try {
 			checkoutProcessed.current = true;
-            const res = await axiosInstance.post("/payments/checkout-success", {sessionId})
+			
+			const response = await axiosInstance.post("/payments/checkout-success", {sessionId, midtransOrderId})
+			
+			 // If order already exists or is successful, clear the cart
+			if (response.data.success) {
+				setOrderId(response.data.orderId);
+				
+				if (response.data.status === 'completed' || response.data.alreadyExists) {
+					await clearCart();
+					console.log('Cart cleared successfully');
+				}
 
-			// If order already exists, just show it
-			if (res.data.alreadyExists) {
-				setOrderId(res.data.orderId);
-				setIsProcessing(false);
-				return;
+				// Remove query params from URL
+				navigate('/purchase-success', { replace: true });
+			} else {
+				setError(response.data.message);
 			}
 
-            setOrderId(res.data.orderId);
-            clearCart();
-
-			// Remove sessionId from URL to prevent refresh issues
-			navigate('/purchase-success', { replace: true });
-
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsProcessing(false);
-        }
+		} catch (error) {
+			console.error("Checkout error:", error);
+			setError(error.response?.data?.message || error.message);
+		} finally {
+			setIsProcessing(false);
+		}
     };
 //TODO make all pages responsive
-// TODO implement midtrans
-        const sessionId = new URLSearchParams(window.location.search).get("session_id");
+// TODO the refresh token is not working
+//TODO make email verification and reset password
+       const params = new URLSearchParams(window.location.search)
+	   const sessionId = params.get("session_id");
+	   const midtransOrderId = params.get("order_id");
 
-        // If no sessionId and we have an orderId, we're probably refreshing
-        if (!sessionId && orderId) {
-            return; // Do nothing if we're just refreshing with an existing order
-        }
+	   if(!sessionId && !midtransOrderId && orderId){
+			setIsProcessing(false);
+			return;
+	   }
 
-        // If no sessionId and no orderId, redirect to home
-        if (!sessionId) {
-            navigate('/');
-            return;
-        }
+	   if(!sessionId && !midtransOrderId){
+		navigate('/');
+		return;
+	   }
 
-        handleCheckoutSuccess(sessionId);
+        handleCheckoutSuccess(sessionId, midtransOrderId);
     }, [clearCart, navigate, orderId])
 
     if(isProcessing) return "Processing...";

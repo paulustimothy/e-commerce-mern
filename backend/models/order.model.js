@@ -34,6 +34,12 @@ const orderSchema = new mongoose.Schema(
 		stripeSessionId: {
 			type: String,
 			unique: true,
+			sparse: true,
+		},
+		midtransOrderId: {
+			type: String,
+			unique: true,
+			sparse: true,
 		},
 		coupon: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +51,7 @@ const orderSchema = new mongoose.Schema(
 
 // Create a unique index on stripeSessionId to prevent duplicates
 orderSchema.index({stripeSessionId: 1}, {unique: true});
+orderSchema.index({midtransOrderId: 1}, {unique: true});
 
 const Order = mongoose.model("Order", orderSchema);
 
