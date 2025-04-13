@@ -15,6 +15,8 @@ import OrderDetails from './pages/OrderDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
 import VerifyEmail from './pages/VerifyEmail'
 import VerificationNeeded from './pages/VerificationNeeded'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 import Navbar from './components/Navbar'
 import LoadingSpinner from './components/LoadingSpinner'
@@ -60,6 +62,12 @@ function App() {
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
         <Route path="/signup" element={user ? <Navigate to="/" /> : <SignUpPage />} />
 
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        <Route path="/verify-email" element={user?.isVerified ? <Navigate to="/" /> : <VerifyEmail />} />
+        <Route path="/verification-needed" element={user?.isVerified ? <Navigate to="/" /> : <VerificationNeeded />} />
+
         <Route path="/dashboard" element={user?.role === "admin" ? <AdminPage /> : <Navigate to="/" />} />
         
         <Route path="/category/:category" element={<CategoryPage />} />
@@ -71,9 +79,6 @@ function App() {
 
         <Route path="/orders" element={user ? <OrderPage /> : <Navigate to="/login" />} />
         <Route path="/orders/:orderId" element={user ? <OrderDetails /> : <Navigate to="/login" />} />
-
-        <Route path="/verify-email" element={user?.isVerified ? <Navigate to="/" /> : <VerifyEmail />} />
-        <Route path="/verification-needed" element={user?.isVerified ? <Navigate to="/" /> : <VerificationNeeded />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

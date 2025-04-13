@@ -21,7 +21,11 @@ const VerificationNeeded = () => {
             await axiosInstance.post('/auth/resend-verification', { userId });
             toast.success('Verification email resent successfully!');
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Failed to resend verification email');
+            if (error.response?.status === 429) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error(error.response?.data?.message || 'Failed to resend verification email');
+            }
         } finally {
             setResending(false);
         }

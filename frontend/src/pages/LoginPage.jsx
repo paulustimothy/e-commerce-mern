@@ -87,6 +87,11 @@ const LoginPage = () => {
                     <Link to="/signup" className="font-medium text-emerald-400 hover:text-emerald-300">Sign up here <ArrowRight className="inline h-4 w-4"/>
                     </Link>
                 </p>
+                <div className="text-center">
+                    <Link to="/forgot-password" className="text-sm text-emerald-400 hover:text-emerald-300">
+                        Forgot your password?
+                    </Link>
+                </div>
             </div>
         </motion.div>
     </div>

@@ -94,3 +94,21 @@ export const sendVerificationEmail = async (user, verificationToken) => {
 
   return true;
 };
+
+export const sendPasswordResetEmail = async (user, resetUrl) => {
+  const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Password Reset Request",
+      html: `
+          <h1>Reset Your Password</h1>
+          <p>Hello ${user.name},</p>
+          <p>You requested to reset your password. Click the link below to reset it:</p>
+          <a href="${resetUrl}" target="_blank">Reset Password</a>
+          <p>This link will expire in 1 hour.</p>
+          <p>If you didn't request this, please ignore this email.</p>
+      `
+  };
+
+  return transporter.sendMail(mailOptions);
+}

@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import {redis} from "../lib/redis.js";
-import {sendVerificationEmail} from "../lib/emailService.js";
+import {sendVerificationEmail, sendPasswordResetEmail} from "../lib/emailService.js";
 import crypto from "crypto";
 
 // generate access and refresh tokens
@@ -177,7 +177,9 @@ export const verifyEmail = async (req, res) => {
         const user = await User.findOne({
             _id: userId,
             verificationToken: token,
-            verificationTokenExpires: { $gt: Date.now() }
+            verificationTokenExpires: { $gt: Date.now(),
+            
+             }
         });
         
         if (!user) {
@@ -214,13 +216,27 @@ export const resendVerification = async (req, res) => {
         if (user.isVerified) {
             return res.status(400).json({ message: "User is already verified" });
         }
+
+        // Check cooldown period (5 minutes)
+        if (user.lastVerificationAttempt) {
+            const cooldownPeriod = 5 * 60 * 1000;
+            const timeSinceLastAttempt = Date.now() - new Date(user.lastVerificationAttempt).getTime();
+
+            if (timeSinceLastAttempt < cooldownPeriod) {
+                const timeLeft = Math.ceil((cooldownPeriod - timeSinceLastAttempt) / 1000 / 60);
+                return res.status(429).json({
+                    message: `Please wait ${timeLeft} minutes before requesting another verification email`
+                });
+            }
+        }
         
         const verificationToken = crypto.randomBytes(32).toString('hex');
         const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
         
         user.verificationToken = verificationToken;
         user.verificationTokenExpires = verificationTokenExpires;
-        
+        user.lastVerificationAttempt = Date.now();
+
         await user.save();
         
         await sendVerificationEmail(user, verificationToken);
@@ -229,5 +245,75 @@ export const resendVerification = async (req, res) => {
     } catch (error) {
         console.log("Error in resendVerification controller", error.message);
         res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const {email} = req.body;
+
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        // Check cooldown period (5 minutes)
+        if (user.lastResetAttempt) {
+            const cooldownPeriod = 5 * 60 * 1000;
+            const timeSinceLastAttempt = Date.now() - new Date(user.lastResetAttempt).getTime();
+
+            if (timeSinceLastAttempt < cooldownPeriod) {
+                const timeLeft = Math.ceil((cooldownPeriod - timeSinceLastAttempt) / 1000 / 60);
+                return res.status(429).json({
+                    message: `Please wait ${timeLeft} minutes before requesting another verification email`
+                });
+            }
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000);
+
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordTokenExpires = resetTokenExpires;
+        user.lastResetAttempt = Date.now();
+
+        await user.save();
+
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&userId=${user._id}`;
+
+        await sendPasswordResetEmail(user, resetUrl);
+
+        res.status(200).json({message: "Password reset email sent successfully"});
+
+    } catch (error) {
+        console.log("Error in forgotPassword controller", error.message);
+        res.status(500).json({message: "Internal server error"});
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { userId, token, password } = req.body;
+
+        const user = await User.findOne({
+            _id: userId,
+            resetPasswordToken: token,
+            resetPasswordTokenExpires: { $gt: Date.now() } //$gt means greater than
+        });
+
+        if(!user){
+            return res.status(400).json({message: "Invalid or expired reset token"});
+        }
+        
+        user.password = password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.status(200).json({message: "Password reset successfully"});
+
+    } catch (error) {
+        console.log("Error in resetPassword controller", error.message);
+        res.status(500).json({message: "Internal server error"});
     }
 }
