@@ -16,6 +16,7 @@ A full-stack e-commerce application built with the MERN stack (MongoDB, Express,
 - 🔄 Real-time updates and notifications
 - 📊 Analytics and reporting
 - 🎁 Gift coupons and promotions
+- 📧 Email verification integration
 
 ## Tech Stack
 
@@ -36,6 +37,7 @@ A full-stack e-commerce application built with the MERN stack (MongoDB, Express,
 - Bcrypt for password hashing
 - Cloudinary for image uploads
 - Payment gateway integration
+- Nodemailer for email integration
 
 ## Prerequisites
 
@@ -87,6 +89,13 @@ REFRESH_TOKEN_SECRET=terserah
 
 # Payment Gateway
 STRIPE_SECRET_KEY=your_stripe_secret_key
+MIDTRANS_MERCHANT_ID=your_midtrans_merchant
+MIDTRANS_CLIENT_KEY=your_midtrans_client_key
+MIDTRANS_SERVER_KEY=your_midtrans_server_key
+
+# Nodemailer
+EMAIL_USER=your_email_user
+EMAIL_APP_PASSWORD=your_email_app_password
 ```
 
 ## Running the Application
