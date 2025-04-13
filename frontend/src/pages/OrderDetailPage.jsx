@@ -154,7 +154,10 @@ const OrderDetail = () => {
                 <div className="mt-8 text-center text-gray-400">
                     <div className="flex items-center justify-center gap-2">
                         <CreditCard className="w-5 h-5" />
-                        <span>Payment processed via Stripe</span>
+                        <span>Payment processed via </span>
+                        <span className="font-medium text-emerald-400">
+                            {currentOrder.paymentMethod}
+                        </span>
                     </div>
                 </div>
             </div>

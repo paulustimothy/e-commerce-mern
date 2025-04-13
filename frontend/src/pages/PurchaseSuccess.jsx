@@ -30,7 +30,6 @@ const PurchaseSuccessPage = () => {
 				
 				if (response.data.status === 'completed' || response.data.alreadyExists) {
 					await clearCart();
-					console.log('Cart cleared successfully');
 				}
 
 				// Remove query params from URL
@@ -47,8 +46,8 @@ const PurchaseSuccessPage = () => {
 		}
     };
 //TODO make all pages responsive
-// TODO the refresh token is not working
 //TODO make email verification and reset password
+// TODO learn the midtrans payment flow
        const params = new URLSearchParams(window.location.search)
 	   const sessionId = params.get("session_id");
 	   const midtransOrderId = params.get("order_id");

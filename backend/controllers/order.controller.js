@@ -64,7 +64,8 @@ export const getUserOrderById = async (req, res) => {
             coupon: order.coupon ? {
                 code: order.coupon.code,
                 discountPercentage: order.coupon.discountPercentage
-            } : null
+            } : null,
+            paymentMethod: order.stripeSessionId ? 'Stripe' : 'Midtrans'
         };
 
         res.status(200).json({order: formattedOrder});
